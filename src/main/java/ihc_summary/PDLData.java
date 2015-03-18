@@ -2,8 +2,8 @@ package ihc_summary;
 
 public class PDLData {
 	int region;
-	int length;
-	int areaUm;
+	double length;
+	double areaUm;
 	double areaMm;
 	String text;
 	double zeroPctCells;
@@ -30,17 +30,17 @@ public class PDLData {
 		region = value;
 	}
 	
-	public int getLength() {
+	public double getLength() {
 		return length;
 	}
-	public void setLength(int value) {
+	public void setLength(double value) {
 		length = value;
 	}
 	
-	public int getAreaUm() {
+	public double getAreaUm() {
 		return areaUm;
 	}
-	public void setAreaUm(int value) {
+	public void setAreaUm(double value) {
 		areaUm = value;
 	}
 	

@@ -394,7 +394,7 @@ public class SummaryXlsCreator {
 		for (File file : dir.listFiles()) {
 			String fileName = file.getName();
 //			if (fileName.toLowerCase().startsWith("cd") && fileName.endsWith(".xls") ) {
-			if (fileName.toLowerCase().startsWith("cd") && fileName.endsWith(".txt")) {
+			if (fileName.endsWith(".txt")) {
 				System.out.println(fileName);
 				CDMarker marker = new CDMarker();
 				marker.setID(Integer.toString(fileindex));
@@ -606,7 +606,7 @@ public class SummaryXlsCreator {
 		for (File file : dir.listFiles()) {
 			String fileName = file.getName();
 //			if (fileName.toLowerCase().startsWith("pdl") && fileName.endsWith(".xls")) {
-			if (fileName.toLowerCase().startsWith("pdl") && fileName.endsWith(".txt")) {
+			if (fileName.endsWith(".txt")) {
 				System.out.println(fileName);
 				PDLMarker marker = new PDLMarker();
 				marker.setID(Integer.toString(fileindex));

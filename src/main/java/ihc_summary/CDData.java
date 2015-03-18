@@ -5,8 +5,8 @@ package ihc_summary;
 
 public class CDData {
 	int region;
-	int length;
-	int areaUm;
+	double length;
+	double areaUm;
 	String text;
 	double onePctNuclei;
 	double zeroPctNuclei;
@@ -37,17 +37,17 @@ public class CDData {
 		region = value;
 	}
 	
-	public int getLength() {
+	public double getLength() {
 		return length;
 	}
-	public void setLength(int value) {
+	public void setLength(double value) {
 		length = value;
 	}
 	
-	public int getAreaUm() {
+	public double getAreaUm() {
 		return areaUm;
 	}
-	public void setAreaUm(int value) {
+	public void setAreaUm(double value) {
 		areaUm = value;
 	}
 	

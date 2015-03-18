@@ -90,11 +90,11 @@ public class PDLMarker implements BioMarker {
 						if (cellCount == 0) 
 							pdlData.setRegion(Integer.parseInt(cell.getStringCellValue()));
 						if (cellCount == 1)
-							pdlData.setLength(Integer.parseInt(cell.getStringCellValue()));
+							pdlData.setLength(Double.parseDouble(cell.getStringCellValue()));
 						if (cellCount == 2) {
-							int area = Integer.parseInt(cell.getStringCellValue());
+							double area = Double.parseDouble(cell.getStringCellValue());
 							pdlData.setAreaUm(area);
-							pdlData.setAreaMm((double)area / 1000000);
+							pdlData.setAreaMm(area / 1000000);
 						}
 						if (cellCount == 4)
 							pdlData.setZeroPctCells(Double.parseDouble(cell.getStringCellValue()));
@@ -232,16 +232,16 @@ public class PDLMarker implements BioMarker {
 			
 			// Looping the read block until all lines read.
 			while ((line = bReader.readLine()) != null) {
-				if (rowCount > 0) {
-		            String datavalue[] = line.split("\t");
+				String datavalue[] = line.split("\t");
+				if (datavalue.length == 17 && !datavalue[0].equals("Region")) {	            
 		            PDLData pdlData = new PDLData();
 		            pdlData.setRegion(Integer.parseInt(datavalue[0]));
-					pdlData.setLength(Integer.parseInt(datavalue[1]));
-					int area = Integer.parseInt(datavalue[2]);
+					pdlData.setLength(Double.parseDouble(datavalue[1]));
+					double area = Double.parseDouble(datavalue[2]);
 					pdlData.setAreaUm(area);
 					
 					// converting area from UM^2 to MM ^2
-					pdlData.setAreaMm((double)area / 1000000);
+					pdlData.setAreaMm(area / 1000000);
 	
 					pdlData.setZeroPctCells(Double.parseDouble(datavalue[4]));
 					pdlData.setPctComplete(Double.parseDouble(datavalue[5]));
@@ -260,11 +260,12 @@ public class PDLMarker implements BioMarker {
 					pdlData.setPercent();
 					pdlData.setHScore();
 					pdlRows.add(pdlData);
+					rowCount ++;
 				}
-				rowCount ++;
+				
 	        }
 	        bReader.close();
-	        rows = rowCount - 1;
+	        rows = rowCount;
 		}
 		catch (IOException e) {
 			e.printStackTrace();
@@ -354,12 +355,14 @@ public class PDLMarker implements BioMarker {
 		
 	}
 	
-	public String accessionFromFilename(String name) {
+	public String accessionFromFilename(String str) {
 		// extract accession # from filename
-		String[] split_str = name.split(" ");
-		String str = split_str[1];
-		int pos = str.lastIndexOf(".");
-		String accNum = str.substring(0, pos);
+		int begin = 0;
+		int end = str.lastIndexOf(".");
+		if (str.contains(" ")) {
+			begin = str.lastIndexOf(" ") + 1;
+		}
+		String accNum = str.substring(begin, end);
 		char c = accNum.charAt(0);
 		// if the first character is a letter type
 		// return the string as accession number

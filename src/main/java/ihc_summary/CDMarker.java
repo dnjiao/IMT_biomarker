@@ -90,9 +90,9 @@ public class CDMarker implements BioMarker {
 						if (cellCount == 0) 
 							cdData.setRegion(Integer.parseInt(cell.getStringCellValue()));
 						if (cellCount == 1)
-							cdData.setLength(Integer.parseInt(cell.getStringCellValue()));
+							cdData.setLength(Double.parseDouble(cell.getStringCellValue()));
 						if (cellCount == 2)
-							cdData.setAreaUm(Integer.parseInt(cell.getStringCellValue()));
+							cdData.setAreaUm(Double.parseDouble(cell.getStringCellValue()));
 						if (cellCount == 4)
 							cdData.setOnePctNuclei(Double.parseDouble(cell.getStringCellValue()));
 						if (cellCount == 5)
@@ -241,12 +241,12 @@ public class CDMarker implements BioMarker {
 			
 			// Looping the read block until all lines read.
 			while ((line = bReader.readLine()) != null) {
-				if (rowCount > 0) {
-		            String datavalue[] = line.split("\t");
+				String datavalue[] = line.split("\t");
+				if (datavalue.length == 22 && !datavalue[0].equals("Region")) {		            
 		            CDData cdData = new CDData();
 		            cdData.setRegion(Integer.parseInt(datavalue[0]));
-					cdData.setLength(Integer.parseInt(datavalue[1]));
-					cdData.setAreaUm(Integer.parseInt(datavalue[2]));
+					cdData.setLength(Double.parseDouble(datavalue[1]));
+					cdData.setAreaUm(Double.parseDouble(datavalue[2]));
 					cdData.setOnePctNuclei(Double.parseDouble(datavalue[4]));
 					cdData.setZeroPctNuclei(Double.parseDouble(datavalue[5]));
 					cdData.setAvgPosIntensity(Double.parseDouble(datavalue[6]));
@@ -269,11 +269,12 @@ public class CDMarker implements BioMarker {
 					cdData.setPercent();
 					cdData.setHScore();
 					cdRows.add(cdData);
+					rowCount ++;
 				}
-				rowCount ++;
+				
 	        }
 	        bReader.close();
-	        rows = rowCount - 1;
+	        rows = rowCount;
 	        System.out.println(rows);
 		}
 		catch (FileNotFoundException e) {
@@ -366,12 +367,15 @@ public class CDMarker implements BioMarker {
 		}
 		
 	}
-	public String accessionFromFilename(String name) {
+	public String accessionFromFilename(String str) {
 		// extract accession # from filename
-		String[] split_str = name.split(" ");
-		String str = split_str[1];
-		int pos = str.lastIndexOf(".");
-		String accNum = str.substring(0, pos);
+		int begin = 0;
+		int end = str.lastIndexOf(".");
+		if (str.contains(" ")) {  // for filename with biomarker name at the beginning
+			begin = str.lastIndexOf(" ") + 1;
+		}
+		
+		String accNum = str.substring(begin, end);
 		char c = accNum.charAt(0);
 		// if the first character is a letter type
 		// return the string as accession number
