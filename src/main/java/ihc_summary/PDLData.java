@@ -153,7 +153,7 @@ public class PDLData {
 		return density;
 	}
 	public void setDensity() {
-		density = (twoCells + oneCells + zeroCells) / areaMm;
+		density = (threeCells + twoCells + oneCells) / areaMm;
 	}
 	
 	public double getPercent() {
