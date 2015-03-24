@@ -53,23 +53,67 @@ public class SummaryXlsCreator {
 			System.out.println("ERROR: " + dirStr + " is not a directory.");
 			System.exit(0);
 		}
+		String dirName = dir.getName();
+		switch(dirName.toLowerCase()) {
+			case "cd3":		markers = writeCDMarker(dataSheet, dir);
+							break;
+			case "cd4":		markers = writeCDMarker(dataSheet, dir);
+							break;
+			case "cd8":		markers = writeCDMarker(dataSheet, dir);
+							break;
+			case "cd20":	markers = writeCDMarker(dataSheet, dir);
+							break;
+			case "cd21":	markers = writeCDMarker(dataSheet, dir);
+							break;
+			case "cd45ro":	markers = writeCDMarker(dataSheet, dir);
+							break;
+			case "cd57":	markers = writeCDMarker(dataSheet, dir);
+							break;
+			case "foxp3":	markers = writeCDMarker(dataSheet, dir);
+							break;
+			case "grb":		markers = writeCDMarker(dataSheet, dir);
+							break;
+			case "pd1":		markers = writeCDMarker(dataSheet, dir);
+							break;
+			case "pd-1":	markers = writeCDMarker(dataSheet, dir);
+							break;
+			case "pdl1 st": markers = writeCDMarker(dataSheet, dir);
+							break;
+			case "pdl1st":	markers = writeCDMarker(dataSheet, dir);
+							break;
+			case "pd-l1 st":markers = writeCDMarker(dataSheet, dir);
+							break;
+			case "ki67":	markers = writeCDMarker(dataSheet, dir);
+							break;
+			case "ki-67":	markers = writeCDMarker(dataSheet, dir);
+							break;
+			case "cc3":		markers = writeCDMarker(dataSheet, dir);
+							break;
+			case "cc-3":	markers = writeCDMarker(dataSheet, dir);
+							break;
+			case "ox40":	markers = writeCDMarker(dataSheet, dir);
+							break;
+			case "ox-40":	markers = writeCDMarker(dataSheet, dir);
+							break;
+			case "lag3": 	markers = writeCDMarker(dataSheet, dir);
+							break;
+			case "lag-3":	markers = writeCDMarker(dataSheet, dir);
+							break;
+			case "vista":	markers = writeCDMarker(dataSheet, dir);
+							break;
+			case "pdl1":	markers = writePDLMarker(dataSheet, dir);
+							break;
+			case "pd-l1 ep":markers = writePDLMarker(dataSheet, dir);
+							break;
+			case "pdl1 ep": markers = writePDLMarker(dataSheet, dir);
+							break;
+			case "pdl1ep":  markers = writePDLMarker(dataSheet, dir);
+							break;
+			default:
+				System.out.println("Invalid biomarker folder " + dirName + ".");
+				System.exit(0);
+		}
 			
-		System.out.println("Please choose the biomarker type: [1/2]");
-		System.out.println("1. CD (CD3,CD4...)");
-		System.out.println("2. PDL");
-		int typeChoice = scan.nextInt();
-
-		if (typeChoice == 1) {
-			markers = writeCDMarker(dataSheet, dir);
-		}
-		else if (typeChoice == 2) {
-			markers = writePDLMarker(dataSheet, dir);
-		}
-		else {
-			System.out.println("ERROR: Invalid selection.");
-			System.exit(0);
-		}
-
 		// create separate summary sheets for density, percent, and h-score 
 		HSSFSheet densitySheet = workbook.createSheet("Summary_Density");
 		HSSFSheet percentSheet = workbook.createSheet("Summary_Percent");
