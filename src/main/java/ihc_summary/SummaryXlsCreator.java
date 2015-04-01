@@ -81,7 +81,7 @@ public class SummaryXlsCreator {
 							break;
 			case "pdl1st":	markers = writeCDMarker(dataSheet, dir);
 							break;
-			case "pd-l1 st":markers = writeCDMarker(dataSheet, dir);
+			case "gitr":	markers = writeCDMarker(dataSheet, dir);
 							break;
 			case "ki67":	markers = writeCDMarker(dataSheet, dir);
 							break;
@@ -90,6 +90,8 @@ public class SummaryXlsCreator {
 			case "cc3":		markers = writeCDMarker(dataSheet, dir);
 							break;
 			case "cc-3":	markers = writeCDMarker(dataSheet, dir);
+							break;
+			case "icos":	markers = writeCDMarker(dataSheet, dir);
 							break;
 			case "ox40":	markers = writeCDMarker(dataSheet, dir);
 							break;
@@ -101,9 +103,9 @@ public class SummaryXlsCreator {
 							break;
 			case "vista":	markers = writeCDMarker(dataSheet, dir);
 							break;
-			case "pdl1":	markers = writePDLMarker(dataSheet, dir);
+			case "cd68":	markers = writePDLMarker(dataSheet, dir);
 							break;
-			case "pd-l1 ep":markers = writePDLMarker(dataSheet, dir);
+			case "pdl1":	markers = writePDLMarker(dataSheet, dir);
 							break;
 			case "pdl1 ep": markers = writePDLMarker(dataSheet, dir);
 							break;
@@ -260,9 +262,9 @@ public class SummaryXlsCreator {
 			if (marker.getNormRows() != 0) {
 				cellDensity = rowDensity.createCell(5);
 				cellDensity.setCellValue(marker.getDensityNorm());
-				cellPercent = rowPercent.createCell(10);
+				cellPercent = rowPercent.createCell(5);
 				cellPercent.setCellValue(marker.getPercentNorm());
-				cellHscore = rowHscore.createCell(11);
+				cellHscore = rowHscore.createCell(5);
 				cellHscore.setCellValue(marker.getHscoreNorm());
 				densityNormTotal += marker.getDensityNorm();
 				percentNormTotal += marker.getPercentNorm();
@@ -555,8 +557,6 @@ public class SummaryXlsCreator {
 		rownum ++;
 		return rownum;
 	}
-
-
 
 	public static List<BioMarker> writePDLMarker(HSSFSheet sheet, File dir) {
 		List<BioMarker> pdlMarkers = new ArrayList<BioMarker>();
