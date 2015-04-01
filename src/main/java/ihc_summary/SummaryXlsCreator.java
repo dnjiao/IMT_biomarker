@@ -316,7 +316,7 @@ public class SummaryXlsCreator {
 		
 		//write to excel file
         try {
-            FileOutputStream out = new FileOutputStream(new File(dir, "summary.xls"));
+            FileOutputStream out = new FileOutputStream(new File(dir, dirName + "_summary.xls"));
             workbook.write(out);
             out.close();
             System.out.println("Excel written successfully..");
