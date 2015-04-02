@@ -96,11 +96,12 @@ public class FinalSummary {
 		for (File file: files) {
 			// looking for all subdirectories in the current folder
 			if (file.isDirectory()) {
+				String fileStr = file.getName() + "_" + fileName;
 				File[] subFiles = file.listFiles();
 				// looking for certain file in each subdirectories.
 				for (File subfile : subFiles) {
 					// if file found, add to the return list
-					if (subfile.isFile() && subfile.getName().equals(fileName)) {
+					if (subfile.isFile() && subfile.getName().equals(fileStr)) {
 						foundFiles.add(subfile);
 					}
 				}
@@ -140,31 +141,31 @@ public class FinalSummary {
 //					mrn = Integer.parseInt(dRow.getCell(1).getStringCellValue());
 					accession = dRow.getCell(2).getStringCellValue();
 					for (int i = 0; i < 9; i++) {
-						//density values
+						//density values i=0,1,2
 						if (i < 3) {
 							if (dRow.getCell(cellIndex) != null) 
 								markerValues[i] = dRow.getCell(cellIndex).getNumericCellValue();
 							else
-								markerValues[i] = 0.0;	
+								markerValues[i] = -1;	
 							
 						}
-						// percent values
+						// percent values i=3,4,5
 						else if (i < 6) {
 							if (i == 3)
 								cellIndex = 3;
 							if (pRow.getCell(cellIndex) != null)
 								markerValues[i] = pRow.getCell(cellIndex).getNumericCellValue();
 							else
-								markerValues[i] = 0.0;
+								markerValues[i] = -1;
 						}
-						// hscore values
+						// hscore values i=6,7,8
 						else {
 							if (i == 6)
 								cellIndex = 3;
 							if (hRow.getCell(cellIndex) != null)
 								markerValues[i] = hRow.getCell(cellIndex).getNumericCellValue();
 							else
-								markerValues[i] = 0.0;
+								markerValues[i] = -1;
 						}
 						cellIndex ++;
 					}
@@ -328,34 +329,42 @@ public class FinalSummary {
 			while (valueIter.hasNext()) {
 				String marker = valueIter.next();
 				int index = list.indexOf(marker); 
-				dCell = dRow.createCell(cellnum + index * 3);
-				pCell = pRow.createCell(cellnum + index * 3);
-				hCell = hRow.createCell(cellnum + index * 3);
-				dCell.setCellStyle(doublestyle);
-				pCell.setCellStyle(doublestyle);
-				hCell.setCellStyle(doublestyle);
-				dCell.setCellValue(valuemap.get(marker)[0]);
-				pCell.setCellValue(valuemap.get(marker)[3]);
-				hCell.setCellValue(valuemap.get(marker)[6]);
-				dCell = dRow.createCell(cellnum + index * 3 + 1);
-				pCell = pRow.createCell(cellnum + index * 3 + 1);
-				hCell = hRow.createCell(cellnum + index * 3 + 1);
-				dCell.setCellStyle(doublestyle);
-				pCell.setCellStyle(doublestyle);
-				hCell.setCellStyle(doublestyle);
-				dCell.setCellValue(valuemap.get(marker)[1]);
-				pCell.setCellValue(valuemap.get(marker)[4]);
-				hCell.setCellValue(valuemap.get(marker)[7]);
-				dCell = dRow.createCell(cellnum + index * 3 + 2);
-				pCell = pRow.createCell(cellnum + index * 3 + 2);
-				hCell = hRow.createCell(cellnum + index * 3 + 2);
-				dCell.setCellStyle(doublestyle);
-				pCell.setCellStyle(doublestyle);
-				hCell.setCellStyle(doublestyle);
-				dCell.setCellValue(valuemap.get(marker)[2]);
-				pCell.setCellValue(valuemap.get(marker)[5]);
-				hCell.setCellValue(valuemap.get(marker)[8]);
-				//cellnum += 3;
+				if (Double.compare(-1, valuemap.get(marker)[0]) != 0)
+				{   // im values
+					dCell = dRow.createCell(cellnum + index * 3);
+					pCell = pRow.createCell(cellnum + index * 3);
+					hCell = hRow.createCell(cellnum + index * 3);
+					dCell.setCellStyle(doublestyle);
+					pCell.setCellStyle(doublestyle);
+					hCell.setCellStyle(doublestyle);
+					dCell.setCellValue(valuemap.get(marker)[0]);			
+					pCell.setCellValue(valuemap.get(marker)[3]);
+					hCell.setCellValue(valuemap.get(marker)[6]);
+				}
+				if (Double.compare(-1, valuemap.get(marker)[1]) != 0)
+				{   // ct values
+					dCell = dRow.createCell(cellnum + index * 3 + 1);
+					pCell = pRow.createCell(cellnum + index * 3 + 1);
+					hCell = hRow.createCell(cellnum + index * 3 + 1);
+					dCell.setCellStyle(doublestyle);
+					pCell.setCellStyle(doublestyle);
+					hCell.setCellStyle(doublestyle);
+					dCell.setCellValue(valuemap.get(marker)[1]);
+					pCell.setCellValue(valuemap.get(marker)[4]);
+					hCell.setCellValue(valuemap.get(marker)[7]);
+				}
+				if (Double.compare(-1, valuemap.get(marker)[2]) != 0)
+				{     // norm values
+					dCell = dRow.createCell(cellnum + index * 3 + 2);
+					pCell = pRow.createCell(cellnum + index * 3 + 2);
+					hCell = hRow.createCell(cellnum + index * 3 + 2);
+					dCell.setCellStyle(doublestyle);
+					pCell.setCellStyle(doublestyle);
+					hCell.setCellStyle(doublestyle);
+					dCell.setCellValue(valuemap.get(marker)[2]);
+					pCell.setCellValue(valuemap.get(marker)[5]);
+					hCell.setCellValue(valuemap.get(marker)[8]);
+				}
 			}
 			rownum ++;
 		}
