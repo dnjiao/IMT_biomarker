@@ -35,7 +35,7 @@ public class SummaryXlsCreator {
 		 
 		if (pathCorrect.equals("y")) {
 			dirStr = cwd;
-		}	
+		}
 		else if (pathCorrect.equals("n")) {  //user needs to provide the working directory with full path
 			System.out.println("Please enter the full path to data directory: ");
 			dirStr = scan.nextLine();
@@ -312,7 +312,6 @@ public class SummaryXlsCreator {
 			cellHscore = rowHscore.createCell(5);
 			cellHscore.setCellValue(hscoreNormTotal/normNum);
 		}
-		
 		
 		//write to excel file
         try {
