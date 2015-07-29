@@ -5,9 +5,12 @@ public interface BioMarker {
 	public void setID(String value);	
 	public int getMrn();
 	public void setMrn(int value);	
-	public String getAccession();
-	public void setAccession(String value);	
-	public void readXls(String path, String filename);
+	public String getTissueAcc();
+	public void setTissueAcc(String tissueAcc);
+	public String getOutsideAcc();
+	public void setOutsideAcc(String outsideAcc);
+	public String getProtocolAcc();
+	public void setProtocolAcc(String protocolAcc);
 	public void readTxt(String path, String filename);
 	public String accessionFromFilename(String name);	
 	public int getImRows();	

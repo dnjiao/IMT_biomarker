@@ -142,16 +142,22 @@ public class SummaryXlsCreator {
 		cellDensity.setCellValue("MRN");
 		cellDensity = rowDensity.createCell(2);
 		cellDensity.setCellStyle(fontStyle);
-		cellDensity.setCellValue("ACC #");
+		cellDensity.setCellValue("Tissue Acc #");
 		cellDensity = rowDensity.createCell(3);
 		cellDensity.setCellStyle(fontStyle);
-		cellDensity.setCellValue("Density IM");
+		cellDensity.setCellValue("Outside Acc #");
 		cellDensity = rowDensity.createCell(4);
 		cellDensity.setCellStyle(fontStyle);
-		cellDensity.setCellValue("Density CT");
+		cellDensity.setCellValue("Protocol Acc #");
 		cellDensity = rowDensity.createCell(5);
 		cellDensity.setCellStyle(fontStyle);
-		cellDensity.setCellValue("Density Normal");
+		cellDensity.setCellValue("Density IM");
+		cellDensity = rowDensity.createCell(6);
+		cellDensity.setCellStyle(fontStyle);
+		cellDensity.setCellValue("Density CT");
+		cellDensity = rowDensity.createCell(7);
+		cellDensity.setCellStyle(fontStyle);
+		cellDensity.setCellValue("Density N");
 		
 		// first row in percent sheet
 		Cell cellPercent = rowPercent.createCell(0);
@@ -162,16 +168,22 @@ public class SummaryXlsCreator {
 		cellPercent.setCellValue("MRN");
 		cellPercent = rowPercent.createCell(2);
 		cellPercent.setCellStyle(fontStyle);
-		cellPercent.setCellValue("ACC #");
+		cellPercent.setCellValue("Tissue Acc #");
 		cellPercent = rowPercent.createCell(3);
 		cellPercent.setCellStyle(fontStyle);
-		cellPercent.setCellValue("Percent IM");
+		cellPercent.setCellValue("Outside Acc #");
 		cellPercent = rowPercent.createCell(4);
 		cellPercent.setCellStyle(fontStyle);
-		cellPercent.setCellValue("Percent CT");
+		cellPercent.setCellValue("Protocol Acc #");
 		cellPercent = rowPercent.createCell(5);
 		cellPercent.setCellStyle(fontStyle);
-		cellPercent.setCellValue("Percent Normal");
+		cellPercent.setCellValue("Percent IM");
+		cellPercent = rowPercent.createCell(6);
+		cellPercent.setCellStyle(fontStyle);
+		cellPercent.setCellValue("Percent CT");
+		cellPercent = rowPercent.createCell(7);
+		cellPercent.setCellStyle(fontStyle);
+		cellPercent.setCellValue("Percent N");
 		
 		// first row in percent sheet
 		Cell cellHscore = rowHscore.createCell(0);
@@ -182,16 +194,22 @@ public class SummaryXlsCreator {
 		cellHscore.setCellValue("MRN");
 		cellHscore = rowHscore.createCell(2);
 		cellHscore.setCellStyle(fontStyle);
-		cellHscore.setCellValue("ACC #");
+		cellHscore.setCellValue("Tissue Acc #");
 		cellHscore = rowHscore.createCell(3);
 		cellHscore.setCellStyle(fontStyle);
-		cellHscore.setCellValue("Hscore IM");
+		cellHscore.setCellValue("Outside Acc #");
 		cellHscore = rowHscore.createCell(4);
 		cellHscore.setCellStyle(fontStyle);
-		cellHscore.setCellValue("Hscore CT");
+		cellHscore.setCellValue("Protocol Acc #");
 		cellHscore = rowHscore.createCell(5);
 		cellHscore.setCellStyle(fontStyle);
-		cellHscore.setCellValue("Hscore Normal");
+		cellHscore.setCellValue("Hscore IM");
+		cellHscore = rowHscore.createCell(6);
+		cellHscore.setCellStyle(fontStyle);
+		cellHscore.setCellValue("Hscore CT");
+		cellHscore = rowHscore.createCell(7);
+		cellHscore.setCellStyle(fontStyle);
+		cellHscore.setCellValue("Hscore N");
 		
 
 		double densityIMTotal = 0.0;
@@ -220,27 +238,28 @@ public class SummaryXlsCreator {
 			cellDensity = rowDensity.createCell(0);
 			cellDensity.setCellValue(marker.getID());
 			cellDensity = rowDensity.createCell(2);
-			cellDensity.setCellValue(marker.getAccession());
+			cellDensity.setCellValue(marker.getTissueAcc());
+			
 			
 			rowPercent = percentSheet.createRow(rownum);
 			cellPercent = rowPercent.createCell(0);
 			cellPercent.setCellValue(marker.getID());
 			cellPercent = rowPercent.createCell(2);
-			cellPercent.setCellValue(marker.getAccession());
+			cellPercent.setCellValue(marker.getTissueAcc());
 			
 			rowHscore = hscoreSheet.createRow(rownum);
 			cellHscore = rowHscore.createCell(0);
 			cellHscore.setCellValue(marker.getID());
 			cellHscore = rowHscore.createCell(2);
-			cellHscore.setCellValue(marker.getAccession());
+			cellHscore.setCellValue(marker.getTissueAcc());
 			rownum ++;
 
 			if (marker.getImRows() != 0) {
-				cellDensity = rowDensity.createCell(3);
+				cellDensity = rowDensity.createCell(5);
 				cellDensity.setCellValue(marker.getDensityIM());
-				cellPercent = rowPercent.createCell(3);
+				cellPercent = rowPercent.createCell(5);
 				cellPercent.setCellValue(marker.getPercentIM());
-				cellHscore = rowHscore.createCell(3);
+				cellHscore = rowHscore.createCell(5);
 				cellHscore.setCellValue(marker.getHscoreIM());
 				densityIMTotal += marker.getDensityIM();
 				percentIMTotal += marker.getPercentIM();
@@ -248,11 +267,11 @@ public class SummaryXlsCreator {
 				imNum ++;
 			}
 			if (marker.getCtRows() != 0) {
-				cellDensity = rowDensity.createCell(4);
+				cellDensity = rowDensity.createCell(6);
 				cellDensity.setCellValue(marker.getDensityCT());
-				cellPercent = rowPercent.createCell(4);
+				cellPercent = rowPercent.createCell(6);
 				cellPercent.setCellValue(marker.getPercentCT());
-				cellHscore = rowHscore.createCell(4);
+				cellHscore = rowHscore.createCell(6);
 				cellHscore.setCellValue(marker.getHscoreCT());
 				densityCTTotal += marker.getDensityCT();
 				percentCTTotal += marker.getPercentCT();
@@ -260,11 +279,11 @@ public class SummaryXlsCreator {
 				ctNum ++;
 			}
 			if (marker.getNormRows() != 0) {
-				cellDensity = rowDensity.createCell(5);
+				cellDensity = rowDensity.createCell(7);
 				cellDensity.setCellValue(marker.getDensityNorm());
-				cellPercent = rowPercent.createCell(5);
+				cellPercent = rowPercent.createCell(7);
 				cellPercent.setCellValue(marker.getPercentNorm());
-				cellHscore = rowHscore.createCell(5);
+				cellHscore = rowHscore.createCell(7);
 				cellHscore.setCellValue(marker.getHscoreNorm());
 				densityNormTotal += marker.getDensityNorm();
 				percentNormTotal += marker.getPercentNorm();
@@ -287,29 +306,29 @@ public class SummaryXlsCreator {
 		cellHscore.setCellStyle(fontStyle);
 		cellHscore.setCellValue("Average");
 		if (imNum != 0) {
-			cellDensity = rowDensity.createCell(3);
+			cellDensity = rowDensity.createCell(5);
 			cellDensity.setCellValue(densityIMTotal/imNum);
-			cellPercent = rowPercent.createCell(3);
+			cellPercent = rowPercent.createCell(5);
 			cellPercent.setCellValue(percentIMTotal/imNum);
-			cellHscore = rowHscore.createCell(3);
+			cellHscore = rowHscore.createCell(5);
 			cellHscore.setCellValue(hscoreIMTotal/imNum);
 		}
 		
 		if (ctNum != 0) {
-			cellDensity = rowDensity.createCell(4);
+			cellDensity = rowDensity.createCell(6);
 			cellDensity.setCellValue(densityCTTotal/ctNum);
-			cellPercent = rowPercent.createCell(4);
+			cellPercent = rowPercent.createCell(6);
 			cellPercent.setCellValue(percentCTTotal/ctNum);
-			cellHscore = rowHscore.createCell(4);
+			cellHscore = rowHscore.createCell(6);
 			cellHscore.setCellValue(hscoreCTTotal/ctNum);
 		}
 		
 		if (normNum != 0) {
-			cellDensity = rowDensity.createCell(5);
+			cellDensity = rowDensity.createCell(7);
 			cellDensity.setCellValue(densityNormTotal/normNum);
-			cellPercent = rowPercent.createCell(5);
+			cellPercent = rowPercent.createCell(7);
 			cellPercent.setCellValue(percentNormTotal/normNum);
-			cellHscore = rowHscore.createCell(5);
+			cellHscore = rowHscore.createCell(7);
 			cellHscore.setCellValue(hscoreNormTotal/normNum);
 		}
 		
@@ -327,7 +346,6 @@ public class SummaryXlsCreator {
         catch (IOException e) {
             e.printStackTrace();
         }
-        
         scan.close();
 	
 	}
@@ -448,7 +466,7 @@ public class SummaryXlsCreator {
 				rownum = writeCDData(sheet, rownum, fileindex, marker);
 				cdMarkers.add(marker);
 				fileindex ++;
-				String outLine = marker.getAccession();
+				String outLine = marker.getTissueAcc();
 				if (marker.getImRows() > 0) {
 					outLine += String.format("%10d%10d%10d", (int)marker.getDensityIM(), (int)marker.getPercentIM(), (int)marker.getHscoreIM());
 				}
@@ -479,7 +497,12 @@ public class SummaryXlsCreator {
 					cell.setCellValue(marker.getID());
 					cellnum = 2;
 					cell = row.createCell(cellnum++);
-					cell.setCellValue(marker.getAccession());
+					cell.setCellValue(marker.getTissueAcc());
+					cell = row.createCell(cellnum++);
+					cell.setCellValue(marker.getOutsideAcc());
+					cell = row.createCell(cellnum++);
+					cell.setCellValue(marker.getProtocolAcc());
+					
 					cell = row.createCell(cellnum++);
 					if (marker.cdRows.size() == 5) 
 						cell.setCellValue("CT");
@@ -658,7 +681,7 @@ public class SummaryXlsCreator {
 				rownum = writePDLData(sheet, rownum, fileindex, marker);
 				pdlMarkers.add(marker);
 				fileindex ++;
-				String outLine = marker.getAccession();
+				String outLine = marker.getTissueAcc();
 				if (marker.getImRows() > 0) {
 					outLine += String.format("%10d%10d%10d", (int)marker.getDensityIM(), (int)marker.getPercentIM(), (int)marker.getHscoreIM());
 				}
@@ -690,7 +713,11 @@ public class SummaryXlsCreator {
 					cell.setCellValue(marker.getID());
 					cellnum = 2;
 					cell = row.createCell(cellnum++);
-					cell.setCellValue(marker.getAccession());
+					cell.setCellValue(marker.getTissueAcc());
+					cell = row.createCell(cellnum++);
+					cell.setCellValue(marker.getOutsideAcc());
+					cell = row.createCell(cellnum++);
+					cell.setCellValue(marker.getProtocolAcc());
 					cell = row.createCell(cellnum++);
 					cell.setCellValue("IM");
 				} 

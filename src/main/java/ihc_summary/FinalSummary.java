@@ -113,7 +113,6 @@ public class FinalSummary {
 	public static HashMap<String, SummaryRow> readSummary(HashMap<String, SummaryRow> mapper, File file, String marker) throws IOException {
 		SummaryRow summary = new SummaryRow();
 		double[] markerValues;
-		int mrn;
 		String id;
 		String accession = null;
 
@@ -228,22 +227,40 @@ public class FinalSummary {
 		dCell = dRow.createCell(1);
 		pCell = pRow.createCell(1);
 		hCell = hRow.createCell(1);
-		dCell.setCellValue("mrn");
-		pCell.setCellValue("mrn");
-		hCell.setCellValue("mrn");
+		dCell.setCellValue("MRN");
+		pCell.setCellValue("MRN");
+		hCell.setCellValue("MRN");
 		dCell.setCellStyle(fontStyle);
 		pCell.setCellStyle(fontStyle);
 		hCell.setCellStyle(fontStyle);
 		dCell = dRow.createCell(2);
 		pCell = pRow.createCell(2);
 		hCell = hRow.createCell(2);
-		dCell.setCellValue("ACC #");
-		pCell.setCellValue("ACC #");
-		hCell.setCellValue("ACC #");
+		dCell.setCellValue("Tissue Acc #");
+		pCell.setCellValue("Tissue Acc #");
+		hCell.setCellValue("Tissue Acc #");
 		dCell.setCellStyle(fontStyle);
 		pCell.setCellStyle(fontStyle);
 		hCell.setCellStyle(fontStyle);
-		int cellnum = 3;
+		dCell = dRow.createCell(3);
+		pCell = pRow.createCell(3);
+		hCell = hRow.createCell(3);
+		dCell.setCellValue("Outside Acc #");
+		pCell.setCellValue("Outside Acc #");
+		hCell.setCellValue("Outside Acc #");
+		dCell.setCellStyle(fontStyle);
+		pCell.setCellStyle(fontStyle);
+		hCell.setCellStyle(fontStyle);
+		dCell = dRow.createCell(4);
+		pCell = pRow.createCell(4);
+		hCell = hRow.createCell(4);
+		dCell.setCellValue("Protocol Acc #");
+		pCell.setCellValue("Protocol Acc #");
+		hCell.setCellValue("Protocol Acc #");
+		dCell.setCellStyle(fontStyle);
+		pCell.setCellStyle(fontStyle);
+		hCell.setCellStyle(fontStyle);
+		int cellnum = 5;
 		for (int i = 0; i < list.size(); i++) {
 			dCell = dRow.createCell(cellnum);
 			pCell = pRow.createCell(cellnum);
@@ -264,26 +281,26 @@ public class FinalSummary {
 		dRow = dSheet.createRow(1);
 		pRow = pSheet.createRow(1);
 		hRow = hSheet.createRow(1);
-		cellnum = 3;
+		cellnum = 5;
 		for (int i = 0; i < list.size(); i++) {
 			dCell = dRow.createCell(cellnum);
 			pCell = pRow.createCell(cellnum);
 			hCell = hRow.createCell(cellnum);
-			dCell.setCellValue("im");
-			pCell.setCellValue("im");
-			hCell.setCellValue("im");
+			dCell.setCellValue("Density IM");
+			pCell.setCellValue("Percent IM");
+			hCell.setCellValue("H-Score IM");
 			dCell = dRow.createCell(cellnum + 1);
 			pCell = pRow.createCell(cellnum + 1);
 			hCell = hRow.createCell(cellnum + 1);
-			dCell.setCellValue("ct");
-			pCell.setCellValue("ct");
-			hCell.setCellValue("ct");
+			dCell.setCellValue("Density CT");
+			pCell.setCellValue("Percent CT");
+			hCell.setCellValue("H-Score CT");
 			dCell = dRow.createCell(cellnum + 2);
 			pCell = pRow.createCell(cellnum + 2);
 			hCell = hRow.createCell(cellnum + 2);
-			dCell.setCellValue("norm");
-			pCell.setCellValue("norm");
-			hCell.setCellValue("norm");
+			dCell.setCellValue("Density N");
+			pCell.setCellValue("Percent N");
+			hCell.setCellValue("H-Score N");
 			cellnum += 3;
 		}
 
@@ -316,9 +333,21 @@ public class FinalSummary {
 			dCell.setCellValue(key);
 			pCell.setCellValue(key);
 			hCell.setCellValue(key);
+			dCell = dRow.createCell(3);
+			pCell = pRow.createCell(3);
+			hCell = hRow.createCell(3);
+			dCell.setCellValue(line.getOutAcc());
+			pCell.setCellValue(line.getOutAcc());
+			hCell.setCellValue(line.getOutAcc());
+			dCell = dRow.createCell(4);
+			pCell = pRow.createCell(4);
+			hCell = hRow.createCell(4);
+			dCell.setCellValue(line.getProAcc());
+			pCell.setCellValue(line.getProAcc());
+			hCell.setCellValue(line.getProAcc());
 			
 			//iterate over the markers for each sample
-			cellnum = 3;
+			cellnum = 5;
 			LinkedHashMap<String, double[]> valuemap = new LinkedHashMap<String, double[]>();
 			valuemap = line.getValueMap();
 			Iterator<String> valueIter = valuemap.keySet().iterator();
