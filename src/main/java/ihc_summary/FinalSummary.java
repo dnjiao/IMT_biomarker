@@ -19,6 +19,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.CellRangeAddress;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -199,6 +200,13 @@ public class FinalSummary {
 		return mapper;
 	}
 	
+	/**
+	 * write biomarker values to spreadsheet
+	 * @param workbook - output spreadhsst
+	 * @param mapper - map of accession no. and list of biomarker values for that accession
+	 * @param list - list of biomarker names
+	 * @return - edited spreadsheet
+	 */
 	@SuppressWarnings("deprecation")
 	public static HSSFWorkbook writeSummarySheets(HSSFWorkbook workbook, HashMap<String, SummaryRow> mapper, List<String> list) {
 		HSSFSheet dSheet = workbook.createSheet("Density");
@@ -310,6 +318,7 @@ public class FinalSummary {
 			cellnum += 3;
 		}
 
+
 		//loop through mapper
 		int rownum = 2;
 		Iterator<String> mapIter = mapper.keySet().iterator();
@@ -372,7 +381,7 @@ public class FinalSummary {
 					dCell.setCellStyle(doublestyle);
 					pCell.setCellStyle(doublestyle);
 					hCell.setCellStyle(doublestyle);
-					dCell.setCellValue(valuemap.get(marker)[0]);			
+					dCell.setCellValue(valuemap.get(marker)[0]);
 					pCell.setCellValue(valuemap.get(marker)[3]);
 					hCell.setCellValue(valuemap.get(marker)[6]);
 				}
@@ -403,9 +412,62 @@ public class FinalSummary {
 			}
 			rownum ++;
 		}
-		
+	
+		workbook = calcAverage(workbook, mapper.size(), list.size());
 		return workbook;
 		
+	}
+
+	/**
+	 * calculte the average values for each column and add a new average row at the bottom of each sheet
+	 * @param workbook - current workbook
+	 * @param rows - number of accessions
+	 * @param cols - number of biomarkers
+	 * @return - modified workbook
+	 */
+	private static HSSFWorkbook calcAverage(HSSFWorkbook workbook, int rows, int cols) {
+		HSSFCellStyle fontStyle = workbook.createCellStyle();
+		HSSFDataFormat format = workbook.createDataFormat();
+		HSSFFont font = workbook.createFont();
+		font.setBold(true);
+		font.setColor(IndexedColors.RED.getIndex());
+		fontStyle.setFont(font);
+		fontStyle.setDataFormat(format.getFormat("0.0"));
 		
+		int numValues;
+		double sumValues;
+		HSSFSheet sheet;
+		Row row, lastRow;
+		Cell cell;
+		// loop through sheets
+		for (int i = 0; i < 3; i ++) {
+			sheet = workbook.getSheetAt(i);
+			lastRow = sheet.createRow(rows + 2);
+			cell = lastRow.createCell(0);
+			cell.setCellValue("Average");
+			cell.setCellStyle(fontStyle);
+			// loop through columns
+			for (int j = 0; j < cols * 3; j ++) {
+				// loop through rows
+				numValues = 0;
+				sumValues = 0.0;
+				for (int k = 0; k < rows; k ++) {
+					row = sheet.getRow(k + 2);
+					cell = row.getCell(j + 5);
+					if (cell != null) {
+						numValues ++;
+						sumValues += cell.getNumericCellValue();
+					}
+				}
+				if (numValues > 0) {
+					cell = lastRow.createCell(j + 5);
+					cell.setCellValue(sumValues / numValues);
+					cell.setCellStyle(fontStyle);
+				}
+				
+				
+			}
+		}
+		return workbook;
 	}
 }
