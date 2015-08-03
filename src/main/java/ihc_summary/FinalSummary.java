@@ -20,6 +20,9 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.CellRangeAddress;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 public class FinalSummary {
 	public static void main(String[] args) {
@@ -68,20 +71,24 @@ public class FinalSummary {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
 		}
 		writeSummarySheets(workbook, markerMap, markerList);
 		
-		// Finally write to the file
+		// get current timestamp, part of filename
+		DateTimeFormatter format = DateTimeFormat.forPattern("MMddyyyyHHmmss");
+		DateTime current = new DateTime();
+	    String dtStr = format.print(current);
+		
+	    // Finally write to the file
 		try {
-            FileOutputStream out = new FileOutputStream(new File(dir, "final_summary.xls"));
+            FileOutputStream out = new FileOutputStream(new File(dir, dir.getName() + "_Summary_" + dtStr + ".xls"));
             workbook.write(out);
             out.close();
             System.out.println("Excel written successfully..");   
-        } 
+        }
         catch (FileNotFoundException e) {
             e.printStackTrace();
-        } 
+        }
         catch (IOException e) {
             e.printStackTrace();
         }
@@ -190,9 +197,8 @@ public class FinalSummary {
 		
 		workbook.close();
 		return mapper;
-		
-		
 	}
+	
 	@SuppressWarnings("deprecation")
 	public static HSSFWorkbook writeSummarySheets(HSSFWorkbook workbook, HashMap<String, SummaryRow> mapper, List<String> list) {
 		HSSFSheet dSheet = workbook.createSheet("Density");
