@@ -13,14 +13,17 @@ import java.util.List;
 import java.util.Scanner;
 
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFDataFormat;
-import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.CellRangeAddress;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFDataFormat;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -28,11 +31,11 @@ import org.joda.time.format.DateTimeFormatter;
 public class FinalSummary {
 	public static void main(String[] args) {
 		// create summary workbook and spreadsheets
-		HSSFWorkbook workbook = new HSSFWorkbook();
+		XSSFWorkbook workbook = new XSSFWorkbook();
 		String dirStr = "";
 		Scanner scan = new Scanner(System.in); 
 		String cwd = System.getProperty("user.dir");  // get current working directory
-		System.out.println("Path to the directory with data files:");
+		System.out.println("Path to data directories:");
 		System.out.print(cwd + "[Y/N]:");
 		String pathCorrect;
 		pathCorrect = scan.nextLine().trim().toLowerCase();
@@ -41,7 +44,7 @@ public class FinalSummary {
 			dirStr = cwd;
 		}	
 		else if (pathCorrect.equals("n")) {  //user needs to provide the working directory with full path
-			System.out.println("Please enter the full path to data directory: ");
+			System.out.println("Please enter the full path to data folders: ");
 			dirStr = scan.nextLine();
 		}
 		else {
@@ -60,12 +63,19 @@ public class FinalSummary {
 		
 		// get summary files from all folders in the current working directory
 		List<File> summaryFiles = listSummaryXls(dirStr, "summary.xls");
+		if (summaryFiles.size() == 0) {
+			System.out.println("No summary files found in directory " + dirStr);
+			return;
+		}
+		
 	
 		HashMap<String, SummaryRow> markerMap = new HashMap<String, SummaryRow>();
 		List<String> markerList = new ArrayList<String>();
 		// Loop through all summary files
+		System.out.println("\nSummary files detected ");
 		for (File file : summaryFiles) {
 			try {
+				System.out.println(file.getAbsolutePath());
 				String markerName = file.getParentFile().getName();
 				markerMap = readSummary(markerMap, file, markerName);
 				markerList.add(markerName);
@@ -82,10 +92,11 @@ public class FinalSummary {
 		
 	    // Finally write to the file
 		try {
-            FileOutputStream out = new FileOutputStream(new File(dir, dir.getName() + "_Summary_" + dtStr + ".xls"));
+			File outfile = new File(dir, dir.getName() + "_Summary_" + dtStr + ".xlsx");
+            FileOutputStream out = new FileOutputStream(outfile);
             workbook.write(out);
             out.close();
-            System.out.println("Excel written successfully..");   
+            System.out.println("\nExcel written successfully: " + outfile.getAbsolutePath());   
         }
         catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -208,15 +219,15 @@ public class FinalSummary {
 	 * @return - edited spreadsheet
 	 */
 	@SuppressWarnings("deprecation")
-	public static HSSFWorkbook writeSummarySheets(HSSFWorkbook workbook, HashMap<String, SummaryRow> mapper, List<String> list) {
-		HSSFSheet dSheet = workbook.createSheet("Density");
-		HSSFSheet pSheet = workbook.createSheet("Percent");
-		HSSFSheet hSheet = workbook.createSheet("H-score");
+	public static XSSFWorkbook writeSummarySheets(XSSFWorkbook workbook, HashMap<String, SummaryRow> mapper, List<String> list) {
+		XSSFSheet dSheet = workbook.createSheet("Density");
+		XSSFSheet pSheet = workbook.createSheet("Percent");
+		XSSFSheet hSheet = workbook.createSheet("H-score");
 		
-		HSSFCellStyle alignStyle = workbook.createCellStyle();
-		HSSFCellStyle fontStyle = workbook.createCellStyle();
+		XSSFCellStyle alignStyle = workbook.createCellStyle();
+		XSSFCellStyle fontStyle = workbook.createCellStyle();
 		alignStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-		HSSFFont font = workbook.createFont();
+		XSSFFont font = workbook.createFont();
 		font.setBold(true);
 		alignStyle.setFont(font);
 		fontStyle.setFont(font);
@@ -303,18 +314,27 @@ public class FinalSummary {
 			dCell.setCellValue("Density IM");
 			pCell.setCellValue("Percent IM");
 			hCell.setCellValue("H-Score IM");
+			dCell.setCellStyle(fontStyle);
+			pCell.setCellStyle(fontStyle);
+			hCell.setCellStyle(fontStyle);
 			dCell = dRow.createCell(cellnum + 1);
 			pCell = pRow.createCell(cellnum + 1);
 			hCell = hRow.createCell(cellnum + 1);
 			dCell.setCellValue("Density CT");
 			pCell.setCellValue("Percent CT");
 			hCell.setCellValue("H-Score CT");
+			dCell.setCellStyle(fontStyle);
+			pCell.setCellStyle(fontStyle);
+			hCell.setCellStyle(fontStyle);
 			dCell = dRow.createCell(cellnum + 2);
 			pCell = pRow.createCell(cellnum + 2);
 			hCell = hRow.createCell(cellnum + 2);
 			dCell.setCellValue("Density N");
 			pCell.setCellValue("Percent N");
 			hCell.setCellValue("H-Score N");
+			dCell.setCellStyle(fontStyle);
+			pCell.setCellStyle(fontStyle);
+			hCell.setCellStyle(fontStyle);
 			cellnum += 3;
 		}
 
@@ -367,8 +387,8 @@ public class FinalSummary {
 			valuemap = line.getValueMap();
 			Iterator<String> valueIter = valuemap.keySet().iterator();
 			// format double to one decimal
-			HSSFDataFormat format = workbook.createDataFormat();
-			HSSFCellStyle doublestyle = workbook.createCellStyle();
+			XSSFDataFormat format = workbook.createDataFormat();
+			XSSFCellStyle doublestyle = workbook.createCellStyle();
 			doublestyle.setDataFormat(format.getFormat("0.0"));
 			while (valueIter.hasNext()) {
 				String marker = valueIter.next();
@@ -425,10 +445,10 @@ public class FinalSummary {
 	 * @param cols - number of biomarkers
 	 * @return - modified workbook
 	 */
-	private static HSSFWorkbook calcAverage(HSSFWorkbook workbook, int rows, int cols) {
-		HSSFCellStyle fontStyle = workbook.createCellStyle();
-		HSSFDataFormat format = workbook.createDataFormat();
-		HSSFFont font = workbook.createFont();
+	private static XSSFWorkbook calcAverage(XSSFWorkbook workbook, int rows, int cols) {
+		XSSFCellStyle fontStyle = workbook.createCellStyle();
+		XSSFDataFormat format = workbook.createDataFormat();
+		XSSFFont font = workbook.createFont();
 		font.setBold(true);
 		font.setColor(IndexedColors.RED.getIndex());
 		fontStyle.setFont(font);
@@ -436,7 +456,7 @@ public class FinalSummary {
 		
 		int numValues;
 		double sumValues;
-		HSSFSheet sheet;
+		XSSFSheet sheet;
 		Row row, lastRow;
 		Cell cell;
 		// loop through sheets

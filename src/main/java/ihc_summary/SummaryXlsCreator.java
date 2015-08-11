@@ -28,7 +28,7 @@ public class SummaryXlsCreator {
 		HSSFSheet dataSheet = workbook.createSheet("Data");
 		
 		String cwd = System.getProperty("user.dir");  // get current working directory
-		System.out.println("Path to the directory with data files:");
+		System.out.println("Path to biomarker directory:");
 		System.out.print(cwd + "[Y/N]:");
 		String pathCorrect;
 		pathCorrect = scan.nextLine().trim().toLowerCase();
@@ -37,7 +37,7 @@ public class SummaryXlsCreator {
 			dirStr = cwd;
 		}
 		else if (pathCorrect.equals("n")) {  //user needs to provide the working directory with full path
-			System.out.println("Please enter the full path to data directory: ");
+			System.out.println("Please enter the full path to biomarker data directory: ");
 			dirStr = scan.nextLine();
 		}
 		else {
@@ -53,67 +53,21 @@ public class SummaryXlsCreator {
 			System.out.println("ERROR: " + dirStr + " is not a directory.");
 			System.exit(0);
 		}
-		String dirName = dir.getName();
-		switch(dirName.toLowerCase()) {
-			case "cd3":		markers = writeCDMarker(dataSheet, dir);
-							break;
-			case "cd4":		markers = writeCDMarker(dataSheet, dir);
-							break;
-			case "cd8":		markers = writeCDMarker(dataSheet, dir);
-							break;
-			case "cd20":	markers = writeCDMarker(dataSheet, dir);
-							break;
-			case "cd21":	markers = writeCDMarker(dataSheet, dir);
-							break;
-			case "cd45ro":	markers = writeCDMarker(dataSheet, dir);
-							break;
-			case "cd57":	markers = writeCDMarker(dataSheet, dir);
-							break;
-			case "foxp3":	markers = writeCDMarker(dataSheet, dir);
-							break;
-			case "grb":		markers = writeCDMarker(dataSheet, dir);
-							break;
-			case "pd1":		markers = writeCDMarker(dataSheet, dir);
-							break;
-			case "pd-1":	markers = writeCDMarker(dataSheet, dir);
-							break;
-			case "pdl1 st": markers = writeCDMarker(dataSheet, dir);
-							break;
-			case "pdl1st":	markers = writeCDMarker(dataSheet, dir);
-							break;
-			case "gitr":	markers = writeCDMarker(dataSheet, dir);
-							break;
-			case "ki67":	markers = writeCDMarker(dataSheet, dir);
-							break;
-			case "ki-67":	markers = writeCDMarker(dataSheet, dir);
-							break;
-			case "cc3":		markers = writeCDMarker(dataSheet, dir);
-							break;
-			case "cc-3":	markers = writeCDMarker(dataSheet, dir);
-							break;
-			case "icos":	markers = writeCDMarker(dataSheet, dir);
-							break;
-			case "ox40":	markers = writeCDMarker(dataSheet, dir);
-							break;
-			case "ox-40":	markers = writeCDMarker(dataSheet, dir);
-							break;
-			case "lag3": 	markers = writeCDMarker(dataSheet, dir);
-							break;
-			case "lag-3":	markers = writeCDMarker(dataSheet, dir);
-							break;
-			case "vista":	markers = writeCDMarker(dataSheet, dir);
-							break;
-			case "cd68":	markers = writePDLMarker(dataSheet, dir);
-							break;
-			case "pdl1":	markers = writePDLMarker(dataSheet, dir);
-							break;
-			case "pdl1 ep": markers = writePDLMarker(dataSheet, dir);
-							break;
-			case "pdl1ep":  markers = writePDLMarker(dataSheet, dir);
-							break;
-			default:
-				System.out.println("Invalid biomarker folder " + dirName + ".");
-				System.exit(0);
+		
+		System.out.println("\nPlease choose the biomarker type: [1/2]");
+		System.out.println("1. CD (CD3,CD4,CD8...)");
+		System.out.println("2. PDL (CD68,PDL1...");
+		int typeChoice = scan.nextInt();
+
+		if (typeChoice == 1) {
+			markers = writeCDMarker(dataSheet, dir);
+		}
+		else if (typeChoice == 2) {
+			markers = writePDLMarker(dataSheet, dir);
+		}
+		else {
+			System.out.println("ERROR: Invalid selection.");
+			System.exit(0);
 		}
 			
 		// create separate summary sheets for density, percent, and h-score 
@@ -334,10 +288,11 @@ public class SummaryXlsCreator {
 		
 		//write to excel file
         try {
-            FileOutputStream out = new FileOutputStream(new File(dir, dirName + "_summary.xls"));
+        	File outfile = new File(dir, dir.getName() + "_summary.xls");
+            FileOutputStream out = new FileOutputStream(outfile);
             workbook.write(out);
             out.close();
-            System.out.println("Excel written successfully..");
+            System.out.println("\nExcel written successfully: " + outfile.getAbsolutePath());
              
         } 
         catch (FileNotFoundException e) {
@@ -453,6 +408,7 @@ public class SummaryXlsCreator {
 		
 		
 		int fileindex = 1;
+		System.out.println("\nReading files:");
 		// iterate all files in directory and only read ".xls" files
 		for (File file : dir.listFiles()) {
 			String fileName = file.getName();
@@ -466,19 +422,6 @@ public class SummaryXlsCreator {
 				rownum = writeCDData(sheet, rownum, fileindex, marker);
 				cdMarkers.add(marker);
 				fileindex ++;
-				String outLine = marker.getTissueAcc();
-				if (marker.getImRows() > 0) {
-					outLine += String.format("%10d%10d%10d", (int)marker.getDensityIM(), (int)marker.getPercentIM(), (int)marker.getHscoreIM());
-				}
-				if (marker.getCtRows() > 0) {
-					outLine += String.format("%10d%10d%10d", (int)marker.getDensityCT(), (int)marker.getPercentCT(), (int)marker.getHscoreCT());
-				}
-				if (marker.getNormRows() > 0) {
-					outLine += String.format("%10d%10d%10d", (int)marker.getDensityNorm(), (int)marker.getPercentNorm(), (int)marker.getHscoreNorm());
-				}
-				System.out.println(outLine + "\n");
-				
-				
 			}
 		}
 		return cdMarkers;
@@ -668,32 +611,18 @@ public class SummaryXlsCreator {
 		
 		
 		int fileindex = 1;
-		// iterate all files in directory and only read ".xls" files
+		System.out.println("\nReading files: ");
+		// iterate all files in directory and only read ".txt" files
 		for (File file : dir.listFiles()) {
 			String fileName = file.getName();
-//			if (fileName.toLowerCase().startsWith("pdl") && fileName.endsWith(".xls")) {
 			if (fileName.endsWith(".txt")) {
 				System.out.println(fileName);
 				PDLMarker marker = new PDLMarker();
 				marker.setID(Integer.toString(fileindex));
-//				marker.readXls(dir.toString(), fileName);
 				marker.readTxt(dir.toString(), fileName);
 				rownum = writePDLData(sheet, rownum, fileindex, marker);
 				pdlMarkers.add(marker);
 				fileindex ++;
-				String outLine = marker.getTissueAcc();
-				if (marker.getImRows() > 0) {
-					outLine += String.format("%10d%10d%10d", (int)marker.getDensityIM(), (int)marker.getPercentIM(), (int)marker.getHscoreIM());
-				}
-				if (marker.getCtRows() > 0) {
-					outLine += String.format("%10d%10d%10d", (int)marker.getDensityCT(), (int)marker.getPercentCT(), (int)marker.getHscoreCT());
-				}
-				if (marker.getNormRows() > 0) {
-					outLine += String.format("%10d%10d%10d", (int)marker.getDensityNorm(), (int)marker.getPercentNorm(), (int)marker.getHscoreNorm());
-				}
-				System.out.println(outLine + "\n");
-				
-				
 			}
 		}
 		return pdlMarkers;

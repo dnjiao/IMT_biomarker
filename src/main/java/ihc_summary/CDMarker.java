@@ -119,7 +119,6 @@ public class CDMarker implements BioMarker {
 	        }
 	        bReader.close();
 	        rows = rowCount;
-	        System.out.println(rows);
 		}
 		catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -166,7 +165,6 @@ public class CDMarker implements BioMarker {
 				percentCTSum += element.getPercent();
 				hscoreCTSum += element.getHScore();
 				arrayIndex ++;
-				System.out.println(densityCTSum + " " + percentCTSum + " " + hscoreCTSum);
 			}
 		}
 		else {  // more than 5 rows; at IM + CT
@@ -177,13 +175,11 @@ public class CDMarker implements BioMarker {
 					percentIMSum += element.getPercent();
 					hscoreIMSum += element.getHScore();
 					arrayIndex ++;
-					System.out.println(densityIMSum + " " + percentIMSum + " " + hscoreIMSum);
 				}
 				else if (arrayIndex < imRows + ctRows) {
 					densityCTSum += element.getDensity();
 					percentCTSum += element.getPercent();
 					hscoreCTSum += element.getHScore();
-					System.out.println(densityCTSum + " " + percentCTSum + " " + hscoreCTSum);
 					arrayIndex ++;
 				}
 				else if (arrayIndex < imRows + ctRows + normRows) {
